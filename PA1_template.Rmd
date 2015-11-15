@@ -70,3 +70,24 @@ The impact of imputing missing data is more concentrated on steps between 10000 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
+Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+```{r}
+Sys.setlocale(category = "LC_TIME", locale = "en_US.UTF-8")
+newStepsData$weekdays = weekdays(as.Date(newStepsData$date))
+newStepsData$weekdays[!(newStepsData$weekdays %in% c("Saturday", "Sunday"))] = "weekday"
+newStepsData$weekdays[newStepsData$weekdays %in% c("Saturday", "Sunday")] = "weekend"
+newStepsData$weekdays = as.factor(newStepsData$weekdays)
+```
+
+Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+```{r}
+library(lattice)
+newStepsByInterval <- tapply(newStepsData$steps, list(newStepsData$interval, newStepsData$weekdays), mean)
+newStepsByIntervalDataFrame <- data.frame(
+    steps = c(newStepsByInterval[,1], newStepsByInterval[,2]), 
+    interval = as.numeric(rep(rownames(newStepsByInterval), 2)), 
+    weekdays = c(rep("weekday", 288), rep("weekend", 288))
+)
+xyplot(steps~interval|weekdays, data=newStepsByIntervalDataFrame,
+       type = "l", layout = c(1, 2))
+```

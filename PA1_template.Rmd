@@ -5,10 +5,6 @@ output:
     keep_md: true
 ---
 
-```{r setoptions, echo = FALSE}
-#opts_chunk$set(echo = TRUE)
-```
-
 ## Loading and preprocessing the data
 
 ```{r loadData}

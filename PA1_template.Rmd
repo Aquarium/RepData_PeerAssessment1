@@ -47,6 +47,26 @@ names(which.max(stepsByInterval))
   
 ## Imputing missing values
 
+Calculate and report the total number of missing values in the dataset
+```{r}
+sum(is.na(stepsData))
+```
 
-  
+Create a new dataset that is equal to the original dataset but with the missing data filled in by the mean for that 5-minute interval.
+```{r}
+newStepsData <- stepsData
+missingSteps <- is.na(newStepsData$steps)
+newStepsData$steps[missingSteps] = stepsByInterval[as.character(newStepsData$interval[missingSteps])]
+```
+
+Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+```{r}
+newSteps <- tapply(newStepsData$steps, newStepsData$date, sum, na.rm = TRUE)
+hist(newSteps, main = "Total Number of Steps Taken Each Day(filled missing values)")
+mean(newSteps)
+median(newSteps)
+```
+The impact of imputing missing data is more concentrated on steps between 10000 to 15000.
+
 ## Are there differences in activity patterns between weekdays and weekends?
+
